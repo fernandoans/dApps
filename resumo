@@ -1,0 +1,64 @@
+Pasta: /home/fernando/Aplicativos/ethereum/
+
+Ethereum e Smart Contracts
+
+Linguagem: Solidity
+Ambiente: Truffle Suite
+
+$ npm install -g truffle
+
+$ truffle init (para iniciar o repositório)
+
+$ truffle unbox MetaCoin
+$ truffle compile
+$ truffle migrate
+$ truffle console
+
+> let instance = await MetaCoin.deployed()
+> let contas = await web3.eth.getAccounts()
+> contas
+> let balance = await instance.getBalance(contas[0])
+> balance
+> balance.toNumber()
+> await instance.sendCoin(contas[1], 10, {from: contas[0]})
+> .exit
+
+[[ Novo Contrato - ProvaDeExistencia.sol ]]
+pragma solidity >=0.4.25 <0.7.0;
+
+contract ProvaDeExistencia {
+
+  bytes32[] private provas;
+  
+  function armazenar(bytes32 prova) public {
+    provas.push(prova);
+  }
+  
+  function checar(bytes32 prova) public view returns (bool) {
+    for (uint256 idx = 0; idx < provas.length; idx++) {
+      if (provas[idx] == prova) {
+        return true;
+      }
+    }
+    return false;
+  }
+  
+  function calcularProva(string memory documento) public pure returns (byte32) {
+    return sha256(bytes(documento))
+  }
+
+}
+[[ Nova Migração - 2_deploy_contracts.js ]]
+const ProvaDeExistencia = artifacts.require("ProvaDeExistencia");
+
+module.exports = function(deployer) {
+  deployer.deploy(ProvaDeExistencia);
+};
+
+$ truffle compile
+$ truffle migrate --reset
+$ truffle console
+
+> let instance = await ProvaDeExistencia.deployed()
+
+
